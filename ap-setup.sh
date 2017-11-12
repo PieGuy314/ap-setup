@@ -7,7 +7,7 @@ usage() {
 [ "$(id -u)" -ne 0 ] && usage && exit 1
 
 read -p "Enter SSID name: " AP_SSID
-read -p "Enter password: " AP_PASS
+read -p "Enter passphrase: " AP_PASS
 
 apt-get update -yqq && apt-get upgrade -yqq
 apt-get install dnsmasq hostapd -yqq
@@ -73,5 +73,5 @@ systemctl enable dhcpcd
 systemctl enable dnsmasq
 systemctl enable hostapd
 
-read -p "Configuration complete. Press ENTER to reboot... "
+read -p "Configuration complete. Press ENTER to reboot... " REPLY
 shutdown -r now
