@@ -1,4 +1,15 @@
 #!/bin/sh
+#
+# Create Raspberry Pi Access Point
+#
+# Tested with Raspbian Stretch Lite (2017-09-07) - Clean install
+#
+# AP with user specified SSID/Pass/Chan on wlan0. Network traffic forwarded to eth0.
+#
+# Defaults:
+#    IP of AP (wlan0): 192.168.137.1/24
+#    DHCP server range: 192.168.137.10 - 192.168.137.100
+#
 
 usage() {
     echo "Usage: sudo $0"
@@ -8,6 +19,16 @@ usage() {
 
 read -p "Enter SSID name: " AP_SSID
 read -p "Enter passphrase: " AP_PASS
+until [ "${AP_CHAN}" ] ; do
+    read -p "Enter Wi-Fi channel (1,6,11): " AP_CHAN
+    case ${AP_CHAN} in
+        1|6|11)
+            break;;
+        *)
+            echo -n "Invalid input. " && AP_CHAN=
+            continue;;
+    esac
+done
 
 apt-get update -yqq && apt-get upgrade -yqq
 apt-get install dnsmasq hostapd -yqq
@@ -44,7 +65,7 @@ interface=wlan0
 driver=nl80211
 ssid=${AP_SSID}
 hw_mode=g
-channel=6
+channel=${AP_CHAN}
 auth_algs=1
 macaddr_acl=0
 wpa=2
