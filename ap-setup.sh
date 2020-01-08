@@ -2,7 +2,7 @@
 #
 # Create Raspberry Pi Access Point
 #
-# Tested with Raspbian Stretch Lite (2017-09-07) - Clean install
+# Should work with Raspbian Buster Lite (2019-09-26) - Clean install
 #
 # AP with user specified SSID/Pass/Chan on wlan0. Network traffic forwarded to eth0.
 #
@@ -33,6 +33,10 @@ done
 apt-get update -yqq && apt-get upgrade -yqq
 apt-get install dnsmasq hostapd -yqq
 
+# Services not yet configured
+systemctl stop dnsmasq
+systemctl stop hostapd
+
 cat >> /etc/network/interfaces <<EOF
 
 auto lo
@@ -51,11 +55,12 @@ interface wlan0
 static ip_address=192.168.137.1/24
 static routers=192.168.137.1
 static domain_name_servers=8.8.8.8 8.8.4.4
+nohook wpa_supplicant
 EOF
 
 cat > /etc/dnsmasq.conf <<EOF
 interface=wlan0
-dhcp-range=192.168.137.10,192.168.137.100,12h
+dhcp-range=192.168.137.10,192.168.137.100,24h
 dhcp-option=3,192.168.137.1
 dhcp-option=6,192.168.137.1
 EOF
@@ -90,9 +95,11 @@ iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 iptables-save > /etc/iptables.ipv4.nat
 
 # Enable services
-systemctl enable dhcpcd
-systemctl enable dnsmasq
+systemctl restart dhcpcd
+systemctl start dnsmasq
+systemctl unmask hostapd
 systemctl enable hostapd
+systemctl start hostapd
 
 read -p "Configuration complete. Press ENTER to reboot... " REPLY
 shutdown -r now
