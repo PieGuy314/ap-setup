@@ -1,6 +1,6 @@
 <h2>Create Raspberry Pi Access Point</h2>
 
-Should work with Raspbian Stretch Lite (2017-09-07) - Clean install
+Should work with Raspbian Buster Lite (2019-09-26) - Clean install
 
 AP with user specified SSID/Pass/Chan on wlan0. Network traffic forwarded to eth0.
 
