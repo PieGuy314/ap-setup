@@ -1,6 +1,6 @@
 <h2>Create Raspberry Pi Access Point</h2>
 
-Tested with Raspbian Stretch Lite (2017-09-07) - Clean install
+Should work with Raspbian Stretch Lite (2017-09-07) - Clean install
 
 AP with user specified SSID/Pass/Chan on wlan0. Network traffic forwarded to eth0.
 
