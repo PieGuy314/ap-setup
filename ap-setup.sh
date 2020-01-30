@@ -100,6 +100,7 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 -A POSTROUTING -o eth0 -j MASQUERADE
 COMMIT
+EOF
 
 # Enable services
 systemctl restart dhcpcd
