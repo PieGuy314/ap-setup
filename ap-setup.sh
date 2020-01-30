@@ -87,10 +87,19 @@ sed -i 's/^#net.ipv4.ip_forward.*/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
 sysctl -p
 
 # NAT
-iptables -F
-iptables -t nat -F
-iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-iptables-save > /etc/iptables.ipv4.nat
+cat > /etc/iptables.ipv4.nat <<EOF
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+COMMIT
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A POSTROUTING -o eth0 -j MASQUERADE
+COMMIT
 
 # Enable services
 systemctl restart dhcpcd
